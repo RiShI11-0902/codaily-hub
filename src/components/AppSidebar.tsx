@@ -1,11 +1,10 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import {
-  LayoutDashboard,
-  Package,
-  MessageSquare,
-  Trophy,
+  FileCode,
+  Video,
+  Crown,
   User,
-  BarChart3,
+  LogOut,
 } from "lucide-react";
 import {
   Sidebar,
@@ -20,24 +19,27 @@ import {
 } from "@/components/ui/sidebar";
 
 const items = [
-  { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
-  { title: "My Packs", url: "/dashboard/packs", icon: Package },
-  { title: "Feedback", url: "/dashboard/feedback", icon: MessageSquare },
-  { title: "Leaderboard", url: "/dashboard/leaderboard", icon: Trophy },
-  { title: "Profile", url: "/dashboard/profile", icon: User },
-  { title: "Analytics", url: "/dashboard/analytics", icon: BarChart3 },
+  { title: "Coding Sheet", url: "/dashboard/coding-sheet", icon: FileCode },
+  { title: "Start Interview", url: "/dashboard/start-interview", icon: Video },
+  { title: "Go Premium", url: "/dashboard/premium", icon: Crown },
+  { title: "Account", url: "/dashboard/account", icon: User },
 ];
 
 export function AppSidebar() {
   const { state } = useSidebar();
   const isCollapsed = state === "collapsed";
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    navigate("/dashboard/logout");
+  };
 
   return (
     <Sidebar collapsible="icon">
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel className={isCollapsed ? "justify-center" : ""}>
-            {!isCollapsed && "Navigation"}
+            {!isCollapsed && "Menu"}
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
@@ -46,8 +48,11 @@ export function AppSidebar() {
                   <SidebarMenuButton asChild tooltip={item.title}>
                     <NavLink
                       to={item.url}
+                      end
                       className={({ isActive }) =>
-                        isActive ? "bg-sidebar-accent text-sidebar-accent-foreground" : ""
+                        isActive 
+                          ? "gradient-heading font-semibold bg-muted/50" 
+                          : "hover:bg-muted/30 transition-all"
                       }
                     >
                       <item.icon />
@@ -56,6 +61,14 @@ export function AppSidebar() {
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
+              
+              {/* Logout Button */}
+              <SidebarMenuItem>
+                <SidebarMenuButton onClick={handleLogout} tooltip="Log Out">
+                  <LogOut />
+                  <span>Log Out</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
