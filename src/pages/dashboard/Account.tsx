@@ -25,10 +25,26 @@ const Account = () => {
           json: async () => ({ 
             message: "Account data loaded",
             user: {
-              name: "John Doe",
-              email: "john.doe@example.com",
+              name: "Alex Johnson",
+              email: "alex.johnson@example.com",
               memberSince: "January 2024",
               plan: "Pro",
+              username: "alexj_dev",
+              phoneNumber: "+1 (555) 123-4567",
+              location: "San Francisco, CA",
+              bio: "Full-stack developer passionate about algorithms and data structures",
+              linkedAccounts: {
+                github: "alexjohnson",
+                linkedin: "alex-johnson-dev"
+              },
+              stats: {
+                totalProblems: 247,
+                easyProblems: 124,
+                mediumProblems: 89,
+                hardProblems: 34,
+                submissions: 512,
+                acceptanceRate: 85
+              }
             }
           })
         }));
@@ -77,14 +93,38 @@ const Account = () => {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="name">Full Name</Label>
-              <Input id="name" defaultValue={data?.user?.name} />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="name">Full Name</Label>
+                <Input id="name" defaultValue={data?.user?.name} />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="username">Username</Label>
+                <Input id="username" defaultValue={data?.user?.username} />
+              </div>
             </div>
             
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <Input id="email" type="email" defaultValue={data?.user?.email} />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="phone">Phone Number</Label>
+                <Input id="phone" defaultValue={data?.user?.phoneNumber} />
+              </div>
+            </div>
+
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" defaultValue={data?.user?.email} />
+              <Label htmlFor="location">Location</Label>
+              <Input id="location" defaultValue={data?.user?.location} />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="bio">Bio</Label>
+              <Input id="bio" defaultValue={data?.user?.bio} />
             </div>
 
             <div className="space-y-2">
@@ -128,6 +168,34 @@ const Account = () => {
               <Button variant="outline" className="w-full">
                 Enable 2FA
               </Button>
+            </CardContent>
+          </Card>
+
+          <Card className="shadow-card">
+            <CardHeader>
+              <CardTitle>Problem Stats</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              <div className="flex justify-between">
+                <span className="text-sm text-muted-foreground">Easy</span>
+                <span className="font-semibold text-green-500">{data?.user?.stats?.easyProblems}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-sm text-muted-foreground">Medium</span>
+                <span className="font-semibold text-yellow-500">{data?.user?.stats?.mediumProblems}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-sm text-muted-foreground">Hard</span>
+                <span className="font-semibold text-red-500">{data?.user?.stats?.hardProblems}</span>
+              </div>
+              <div className="flex justify-between pt-2 border-t">
+                <span className="text-sm font-medium">Total</span>
+                <span className="font-bold gradient-heading">{data?.user?.stats?.totalProblems}</span>
+              </div>
+              <div className="flex justify-between pt-2">
+                <span className="text-sm text-muted-foreground">Acceptance Rate</span>
+                <span className="font-semibold text-primary">{data?.user?.stats?.acceptanceRate}%</span>
+              </div>
             </CardContent>
           </Card>
         </div>

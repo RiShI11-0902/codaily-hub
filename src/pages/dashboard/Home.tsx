@@ -142,13 +142,19 @@ const Home = () => {
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={weeklyActivity}>
               <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
-              <XAxis dataKey="day" className="text-xs" />
-              <YAxis className="text-xs" />
+              <XAxis 
+                dataKey="day" 
+                tick={{ fill: 'hsl(var(--foreground))', fontSize: 12 }}
+              />
+              <YAxis 
+                tick={{ fill: 'hsl(var(--foreground))', fontSize: 12 }}
+              />
               <Tooltip 
                 contentStyle={{ 
                   backgroundColor: 'hsl(var(--card))',
                   border: '1px solid hsl(var(--border))',
-                  borderRadius: '8px'
+                  borderRadius: '8px',
+                  color: 'hsl(var(--foreground))'
                 }}
               />
               <Bar dataKey="problems" fill="hsl(var(--primary))" radius={[8, 8, 0, 0]} />
