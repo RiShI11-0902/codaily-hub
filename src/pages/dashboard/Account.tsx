@@ -18,44 +18,35 @@ const Account = () => {
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      try {
-        // Dummy API call
-        const response = await fetch('/api/account').catch(() => ({
-          ok: false,
-          json: async () => ({ 
-            message: "Account data loaded",
-            user: {
-              name: "Alex Johnson",
-              email: "alex.johnson@example.com",
-              memberSince: "January 2024",
-              plan: "Pro",
-              username: "alexj_dev",
-              phoneNumber: "+1 (555) 123-4567",
-              location: "San Francisco, CA",
-              bio: "Full-stack developer passionate about algorithms and data structures",
-              linkedAccounts: {
-                github: "alexjohnson",
-                linkedin: "alex-johnson-dev"
-              },
-              stats: {
-                totalProblems: 247,
-                easyProblems: 124,
-                mediumProblems: 89,
-                hardProblems: 34,
-                submissions: 512,
-                acceptanceRate: 85
-              }
-            }
-          })
-        }));
-        
-        const result = await response.json();
-        setData(result);
-      } catch (error) {
-        console.error("Error fetching account data:", error);
-      } finally {
-        setLoading(false);
-      }
+      // Use dummy data directly since API endpoints don't exist
+      const dummyData = {
+        message: "Account data loaded",
+        user: {
+          name: "Alex Johnson",
+          email: "alex.johnson@example.com",
+          memberSince: "January 2024",
+          plan: "Pro",
+          username: "alexj_dev",
+          phoneNumber: "+1 (555) 123-4567",
+          location: "San Francisco, CA",
+          bio: "Full-stack developer passionate about algorithms and data structures",
+          linkedAccounts: {
+            github: "alexjohnson",
+            linkedin: "alex-johnson-dev"
+          },
+          stats: {
+            totalProblems: 247,
+            easyProblems: 124,
+            mediumProblems: 89,
+            hardProblems: 34,
+            submissions: 512,
+            acceptanceRate: 85
+          }
+        }
+      };
+      
+      setData(dummyData);
+      setLoading(false);
     };
 
     fetchData();

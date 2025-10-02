@@ -15,47 +15,39 @@ const Home = () => {
       
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      try {
-        const response = await fetch('/api/dashboard').catch(() => ({
-          ok: false,
-          json: async () => ({ 
-            stats: {
-              problemsSolved: 247,
-              currentStreak: 23,
-              studyTime: 87,
-              targetProgress: 78
-            },
-            weeklyActivity: [
-              { day: 'Mon', problems: 8 },
-              { day: 'Tue', problems: 12 },
-              { day: 'Wed', problems: 6 },
-              { day: 'Thu', problems: 15 },
-              { day: 'Fri', problems: 10 },
-              { day: 'Sat', problems: 18 },
-              { day: 'Sun', problems: 14 }
-            ],
-            recentActivity: [
-              { id: 1, title: "Two Sum", difficulty: "Easy", completed: true },
-              { id: 2, title: "Valid Parentheses", difficulty: "Easy", completed: true },
-              { id: 3, title: "Binary Tree Traversal", difficulty: "Medium", completed: true },
-              { id: 4, title: "Longest Substring Without Repeating", difficulty: "Medium", completed: true },
-              { id: 5, title: "Median of Two Sorted Arrays", difficulty: "Hard", completed: true },
-              { id: 6, title: "Maximum Subarray", difficulty: "Medium", completed: true },
-              { id: 7, title: "Climbing Stairs", difficulty: "Easy", completed: true },
-              { id: 8, title: "Merge K Sorted Lists", difficulty: "Hard", completed: false },
-              { id: 9, title: "Reverse Linked List", difficulty: "Easy", completed: true },
-              { id: 10, title: "Design Twitter", difficulty: "Hard", completed: false }
-            ]
-          })
-        }));
-        
-        const result = await response.json();
-        setData(result);
-      } catch (error) {
-        console.error("Error fetching dashboard:", error);
-      } finally {
-        setLoading(false);
-      }
+      // Use dummy data directly since API endpoints don't exist
+      const dummyData = {
+        stats: {
+          problemsSolved: 247,
+          currentStreak: 23,
+          studyTime: 87,
+          targetProgress: 78
+        },
+        weeklyActivity: [
+          { day: 'Mon', problems: 8 },
+          { day: 'Tue', problems: 12 },
+          { day: 'Wed', problems: 6 },
+          { day: 'Thu', problems: 15 },
+          { day: 'Fri', problems: 10 },
+          { day: 'Sat', problems: 18 },
+          { day: 'Sun', problems: 14 }
+        ],
+        recentActivity: [
+          { id: 1, title: "Two Sum", difficulty: "Easy", completed: true },
+          { id: 2, title: "Valid Parentheses", difficulty: "Easy", completed: true },
+          { id: 3, title: "Binary Tree Traversal", difficulty: "Medium", completed: true },
+          { id: 4, title: "Longest Substring Without Repeating", difficulty: "Medium", completed: true },
+          { id: 5, title: "Median of Two Sorted Arrays", difficulty: "Hard", completed: true },
+          { id: 6, title: "Maximum Subarray", difficulty: "Medium", completed: true },
+          { id: 7, title: "Climbing Stairs", difficulty: "Easy", completed: true },
+          { id: 8, title: "Merge K Sorted Lists", difficulty: "Hard", completed: false },
+          { id: 9, title: "Reverse Linked List", difficulty: "Easy", completed: true },
+          { id: 10, title: "Design Twitter", difficulty: "Hard", completed: false }
+        ]
+      };
+      
+      setData(dummyData);
+      setLoading(false);
     };
 
     fetchData();
