@@ -1,5 +1,6 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import {
+  LayoutDashboard,
   FileCode,
   Video,
   Crown,
@@ -19,6 +20,7 @@ import {
 } from "@/components/ui/sidebar";
 
 const items = [
+  { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
   { title: "Coding Sheet", url: "/dashboard/coding-sheet", icon: FileCode },
   { title: "Start Interview", url: "/dashboard/start-interview", icon: Video },
   { title: "Go Premium", url: "/dashboard/premium", icon: Crown },

@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
+import Home from "./dashboard/Home";
 import CodingSheet from "./dashboard/CodingSheet";
 import StartInterview from "./dashboard/StartInterview";
 import Premium from "./dashboard/Premium";
@@ -20,7 +21,7 @@ const Dashboard = () => {
 
           <div className="p-6 transition-all duration-300">
             <Routes>
-              <Route path="/" element={<Navigate to="/dashboard/coding-sheet" replace />} />
+              <Route path="/" element={<Home />} />
               <Route path="/coding-sheet" element={<CodingSheet />} />
               <Route path="/start-interview" element={<StartInterview />} />
               <Route path="/premium" element={<Premium />} />
