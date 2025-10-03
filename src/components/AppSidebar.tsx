@@ -6,6 +6,7 @@ import {
   Crown,
   User,
   LogOut,
+  Users,
 } from "lucide-react";
 import {
   Sidebar,
@@ -23,6 +24,7 @@ const items = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
   { title: "Coding Sheet", url: "/dashboard/coding-sheet", icon: FileCode },
   { title: "Start Interview", url: "/dashboard/start-interview", icon: Video },
+  { title: "Groups", url: "/dashboard/groups", icon: Users },
   { title: "Go Premium", url: "/dashboard/premium", icon: Crown },
   { title: "Account", url: "/dashboard/account", icon: User },
 ];
