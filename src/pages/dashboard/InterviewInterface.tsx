@@ -2,9 +2,11 @@ import { useState, useRef, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
-import { Video, Mic, Square, Save, ChevronRight, Award } from "lucide-react";
+import { Video, Mic, Square, Save, ChevronRight, Award, FileText } from "lucide-react";
 import axios from "axios";
 
 interface Question {
@@ -15,6 +17,7 @@ interface Question {
 interface RecordedAnswer {
   questionId: number;
   question: string;
+  answerText: string;
   videoBlob?: Blob;
   audioBlob?: Blob;
 }
@@ -31,6 +34,7 @@ const InterviewInterface = () => {
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
   const [recordedChunks, setRecordedChunks] = useState<Blob[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [answerText, setAnswerText] = useState("");
   
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
@@ -115,10 +119,10 @@ const InterviewInterface = () => {
   };
 
   const saveAnswer = () => {
-    if (recordedChunks.length === 0) {
+    if (recordedChunks.length === 0 && !answerText.trim()) {
       toast({
-        title: "No recording",
-        description: "Please record your answer before saving.",
+        title: "No answer provided",
+        description: "Please record your answer or write a text response before saving.",
         variant: "destructive",
       });
       return;
@@ -127,17 +131,19 @@ const InterviewInterface = () => {
     const newAnswer: RecordedAnswer = {
       questionId: currentQuestion.id,
       question: currentQuestion.question,
+      answerText: answerText.trim(),
     };
 
     if (recordingType === 'video') {
       newAnswer.videoBlob = recordedChunks[0];
-    } else {
+    } else if (recordingType === 'audio') {
       newAnswer.audioBlob = recordedChunks[0];
     }
 
     setRecordedAnswers([...recordedAnswers, newAnswer]);
     setRecordedChunks([]);
     setRecordingType(null);
+    setAnswerText("");
 
     toast({
       title: "Answer saved",
@@ -162,6 +168,7 @@ const InterviewInterface = () => {
       
       answers.forEach((answer, index) => {
         formData.append(`questions[${index}]`, answer.question);
+        formData.append(`answers[${index}]`, answer.answerText);
         if (answer.videoBlob) {
           formData.append(`videos[${index}]`, answer.videoBlob, `question_${answer.questionId}.webm`);
         }
@@ -253,6 +260,27 @@ const InterviewInterface = () => {
             </div>
           )}
 
+          {/* Answer Text Box */}
+          <div className="space-y-2">
+            <Label htmlFor="answer-text" className="flex items-center gap-2 text-base font-semibold">
+              <FileText className="h-4 w-4" />
+              Your Answer (Text)
+            </Label>
+            <Textarea
+              id="answer-text"
+              placeholder="Type or edit your answer here. You can write your response directly or edit the transcript after recording..."
+              value={answerText}
+              onChange={(e) => setAnswerText(e.target.value)}
+              className="min-h-[150px] resize-y"
+              disabled={isRecording}
+            />
+            <p className="text-xs text-muted-foreground">
+              {answerText.length > 0 
+                ? `${answerText.length} characters` 
+                : "You can type your answer or record audio/video"}
+            </p>
+          </div>
+
           {/* Recording Controls */}
           <div className="flex flex-col sm:flex-row gap-4">
             {!isRecording ? (
@@ -290,8 +318,19 @@ const InterviewInterface = () => {
             )}
           </div>
 
-          {/* Save Button */}
+          {/* Recording Status */}
           {recordedChunks.length > 0 && !isRecording && (
+            <div className="p-4 bg-primary/10 border border-primary/20 rounded-lg">
+              <p className="text-sm font-medium text-primary flex items-center gap-2">
+                <Award className="h-4 w-4" />
+                {recordingType === 'video' ? 'Video' : 'Audio'} recording completed! 
+                {answerText.trim() ? " You can now edit your text answer or save to continue." : " Add a text summary above or save to continue."}
+              </p>
+            </div>
+          )}
+
+          {/* Save Button */}
+          {(recordedChunks.length > 0 || answerText.trim()) && !isRecording && (
             <Button
               onClick={saveAnswer}
               size="lg"
