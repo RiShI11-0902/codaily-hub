@@ -4,6 +4,8 @@ import { AppSidebar } from "@/components/AppSidebar";
 import Home from "./dashboard/Home";
 import CodingSheet from "./dashboard/CodingSheet";
 import StartInterview from "./dashboard/StartInterview";
+import InterviewInterface from "./dashboard/InterviewInterface";
+import Leaderboard from "./dashboard/Leaderboard";
 import Groups from "./dashboard/Groups";
 import Premium from "./dashboard/Premium";
 import Account from "./dashboard/Account";
@@ -25,6 +27,8 @@ const Dashboard = () => {
               <Route path="/" element={<Home />} />
               <Route path="/coding-sheet" element={<CodingSheet />} />
               <Route path="/start-interview" element={<StartInterview />} />
+              <Route path="/interview/:packId" element={<InterviewInterface />} />
+              <Route path="/leaderboard/:packId" element={<Leaderboard />} />
               <Route path="/groups" element={<Groups />} />
               <Route path="/premium" element={<Premium />} />
               <Route path="/account" element={<Account />} />
