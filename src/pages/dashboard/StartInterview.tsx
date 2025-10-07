@@ -5,37 +5,38 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { PlayCircle, Clock, Zap, Video, Award, Code } from "lucide-react";
+import axios from "axios";
 
 const StartInterview = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<any>(null);
-  
+
   // Simulate purchased packs (in production, fetch from backend)
   const purchasedPacks = [
-    { 
+    {
       id: 1,
-      name: "Java Interview Pack", 
+      name: "Java Interview Pack",
       language: "Java",
-      questions: 25, 
+      questions: 25,
       duration: "60 min",
       difficulty: "Medium",
       purchased: true
     },
-    { 
+    {
       id: 2,
-      name: "Python Mastery", 
+      name: "Python Mastery",
       language: "Python",
-      questions: 30, 
+      questions: 30,
       duration: "75 min",
       difficulty: "Medium",
       purchased: true
     },
-    { 
+    {
       id: 3,
-      name: "JavaScript Expert", 
+      name: "JavaScript Expert",
       language: "JavaScript",
-      questions: 28, 
+      questions: 28,
       duration: "70 min",
       difficulty: "Advanced",
       purchased: true
@@ -45,26 +46,19 @@ const StartInterview = () => {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      
+
       // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1200));
-      
+      // await new Promise(resolve => setTimeout(resolve, 1200));
+
+
       try {
         // Dummy API call
-        const response = await fetch('/api/start-interview').catch(() => ({
-          ok: false,
-          json: async () => ({ 
-            message: "Interview data loaded",
-            interviews: [
-              { id: 1, type: "Easy", duration: "30 min", questions: 2 },
-              { id: 2, type: "Medium", duration: "45 min", questions: 3 },
-              { id: 3, type: "Hard", duration: "60 min", questions: 4 },
-            ]
-          })
-        }));
+        const res = await axios.get(`${import.meta.env.VITE_BACKEND_BASE_URL}/pack/get`); // your endpoint to fetch all packs
+
+        setData(res.data.packs);
+
+        console.log(res.data.packs);
         
-        const result = await response.json();
-        setData(result);
       } catch (error) {
         console.error("Error fetching interview data:", error);
       } finally {
@@ -101,10 +95,10 @@ const StartInterview = () => {
           <Award className="h-6 w-6 text-primary" />
           Your Interview Packs
         </h2>
-        
-        {purchasedPacks.length > 0 ? (
+
+        {data.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {purchasedPacks.map((pack) => (
+            {data.map((pack) => (
               <Card key={pack.id} className="shadow-card hover:shadow-card-hover transition-all">
                 <CardHeader>
                   <div className="flex items-center justify-between mb-2">
@@ -113,34 +107,30 @@ const StartInterview = () => {
                     </div>
                     <Badge variant="default">{pack.language}</Badge>
                   </div>
-                  <CardTitle className="text-xl">{pack.name}</CardTitle>
+                  <CardTitle className="text-xl">{pack.packName}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="space-y-2">
                     <div className="flex items-center gap-2 text-sm">
                       <Video className="h-4 w-4 text-primary" />
-                      <span>{pack.questions} Questions</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-sm">
-                      <Clock className="h-4 w-4 text-primary" />
-                      <span>{pack.duration}</span>
+                      <span>{pack.questions.length} Questions</span>
                     </div>
                     <div className="flex items-center gap-2 text-sm">
                       <Award className="h-4 w-4 text-primary" />
-                      <Badge variant="outline" className="text-xs">{pack.difficulty}</Badge>
+                      <Badge variant="outline" className="text-xs">{pack.description}</Badge>
                     </div>
                   </div>
                   <div className="flex gap-2">
-                    <Button 
-                      className="flex-1" 
+                    <Button
+                      className="flex-1"
                       size="lg"
-                      onClick={() => navigate(`/dashboard/interview/${pack.id}`)}
+                      onClick={() => navigate(`/dashboard/interview/${pack._id}`)}
                     >
                       <PlayCircle className="mr-2 h-4 w-4" />
                       Start
                     </Button>
-                    <Button 
-                      variant="outline" 
+                    <Button
+                      variant="outline"
                       size="lg"
                       onClick={() => navigate(`/dashboard/leaderboard/${pack.id}`)}
                     >
@@ -161,7 +151,7 @@ const StartInterview = () => {
         )}
       </div>
 
-      {/* Practice Levels */}
+      {/* Practice Levels
       <div>
         <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
           <Zap className="h-6 w-6 text-primary" />
@@ -194,7 +184,7 @@ const StartInterview = () => {
             </Card>
           ))}
         </div>
-      </div>
+      </div> */}
 
       <Card className="shadow-card">
         <CardContent className="p-6">

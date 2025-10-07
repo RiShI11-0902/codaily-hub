@@ -10,8 +10,8 @@ import { Video, Mic, Square, Save, ChevronRight, Award, FileText } from "lucide-
 import axios from "axios";
 
 interface Question {
-  id: number;
-  question: string;
+  _id: number;
+  questionText: string;
 }
 
 interface RecordedAnswer {
@@ -26,7 +26,7 @@ const InterviewInterface = () => {
   const { packId } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
-  
+
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [isRecording, setIsRecording] = useState(false);
   const [recordingType, setRecordingType] = useState<'video' | 'audio' | null>(null);
@@ -35,18 +35,9 @@ const InterviewInterface = () => {
   const [recordedChunks, setRecordedChunks] = useState<Blob[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [answerText, setAnswerText] = useState("");
-  
+  const [questions, setQuestions] = useState<Question[]>([]);
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
-
-  // Dummy questions - in production, fetch based on packId
-  const questions: Question[] = [
-    { id: 1, question: "Explain the concept of Object-Oriented Programming and its key principles." },
-    { id: 2, question: "What is the difference between stack and heap memory allocation?" },
-    { id: 3, question: "Describe how you would implement a binary search tree." },
-    { id: 4, question: "Explain the concept of closures in JavaScript/Python." },
-    { id: 5, question: "What are the benefits of using design patterns in software development?" },
-  ];
 
   const currentQuestion = questions[currentQuestionIndex];
   const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
@@ -54,7 +45,7 @@ const InterviewInterface = () => {
 
   const startRecording = async (type: 'video' | 'audio') => {
     try {
-      const constraints = type === 'video' 
+      const constraints = type === 'video'
         ? { video: true, audio: true }
         : { audio: true };
 
@@ -77,8 +68,8 @@ const InterviewInterface = () => {
       };
 
       recorder.onstop = () => {
-        const blob = new Blob(chunks, { 
-          type: type === 'video' ? 'video/webm' : 'audio/webm' 
+        const blob = new Blob(chunks, {
+          type: type === 'video' ? 'video/webm' : 'audio/webm'
         });
         setRecordedChunks([blob]);
       };
@@ -129,8 +120,8 @@ const InterviewInterface = () => {
     }
 
     const newAnswer: RecordedAnswer = {
-      questionId: currentQuestion.id,
-      question: currentQuestion.question,
+      questionId: currentQuestion._id,
+      question: currentQuestion.questionText,
       answerText: answerText.trim(),
     };
 
@@ -160,12 +151,12 @@ const InterviewInterface = () => {
 
   const submitAllAnswers = async (answers: RecordedAnswer[]) => {
     setIsSubmitting(true);
-    
+
     try {
       // Create FormData to send files
       const formData = new FormData();
       formData.append('packId', packId || '');
-      
+
       answers.forEach((answer, index) => {
         formData.append(`questions[${index}]`, answer.question);
         formData.append(`answers[${index}]`, answer.answerText);
@@ -207,6 +198,20 @@ const InterviewInterface = () => {
   };
 
   useEffect(() => {
+    const fetchQuestion = async () => {
+      try {
+        const res = await axios.get(`${import.meta.env.VITE_BACKEND_BASE_URL}/pack/${packId}/questions`);
+        setQuestions(res.data.pack.questions || []);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    fetchQuestion()
+  }, [])
+
+
+  useEffect(() => {
     return () => {
       if (streamRef.current) {
         streamRef.current.getTracks().forEach(track => track.stop());
@@ -229,11 +234,11 @@ const InterviewInterface = () => {
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="p-6 bg-muted/30 rounded-lg">
-            <p className="text-lg">{currentQuestion.question}</p>
+            <p className="text-lg">{currentQuestion?.questionText}</p>
           </div>
 
           {/* Video Preview */}
-          {recordingType === 'video' && (
+          {/* {recordingType === 'video' && (
             <div className="relative rounded-lg overflow-hidden bg-black">
               <video
                 ref={videoRef}
@@ -248,7 +253,7 @@ const InterviewInterface = () => {
                 </div>
               )}
             </div>
-          )}
+          )} */}
 
           {/* Audio Recording Indicator */}
           {recordingType === 'audio' && isRecording && (
@@ -275,8 +280,8 @@ const InterviewInterface = () => {
               disabled={isRecording}
             />
             <p className="text-xs text-muted-foreground">
-              {answerText.length > 0 
-                ? `${answerText.length} characters` 
+              {answerText.length > 0
+                ? `${answerText.length} characters`
                 : "You can type your answer or record audio/video"}
             </p>
           </div>
@@ -285,7 +290,7 @@ const InterviewInterface = () => {
           <div className="flex flex-col sm:flex-row gap-4">
             {!isRecording ? (
               <>
-                <Button
+                {/* <Button
                   onClick={() => startRecording('video')}
                   size="lg"
                   className="flex-1"
@@ -293,7 +298,7 @@ const InterviewInterface = () => {
                 >
                   <Video className="mr-2 h-5 w-5" />
                   Record Video Answer
-                </Button>
+                </Button> */}
                 <Button
                   onClick={() => startRecording('audio')}
                   size="lg"
@@ -323,7 +328,7 @@ const InterviewInterface = () => {
             <div className="p-4 bg-primary/10 border border-primary/20 rounded-lg">
               <p className="text-sm font-medium text-primary flex items-center gap-2">
                 <Award className="h-4 w-4" />
-                {recordingType === 'video' ? 'Video' : 'Audio'} recording completed! 
+                {recordingType === 'video' ? 'Video' : 'Audio'} recording completed!
                 {answerText.trim() ? " You can now edit your text answer or save to continue." : " Add a text summary above or save to continue."}
               </p>
             </div>
