@@ -6,8 +6,16 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
-import { Video, Mic, Square, Save, ChevronRight, Award, FileText } from "lucide-react";
+import { Video, Mic, Square, Save, ChevronRight, Award, FileText, MessageSquare } from "lucide-react";
 import axios from "axios";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 
 interface Question {
   _id: number;
@@ -36,6 +44,8 @@ const InterviewInterface = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [answerText, setAnswerText] = useState("");
   const [questions, setQuestions] = useState<Question[]>([]);
+  const [feedback, setFeedback] = useState<string | null>(null);
+  const [showFeedbackDialog, setShowFeedbackDialog] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
 
@@ -169,22 +179,38 @@ const InterviewInterface = () => {
       });
 
       // Dummy API call - replace with actual endpoint
-      await axios.post('/api/submit-interview', formData, {
+      const response = await axios.post('/api/submit-interview', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       }).catch(() => {
-        // Simulate successful submission for dummy
+        // Simulate successful submission with dummy feedback
         console.log('Interview submitted (dummy):', answers);
+        return {
+          data: {
+            feedback: `Great job completing the interview! Here's your personalized feedback:\n\n✅ Strengths:\n• Clear and concise communication\n• Good technical knowledge demonstrated in ${answers.length} questions\n• Well-structured answers with relevant examples\n\n🎯 Areas for Improvement:\n• Could provide more specific examples in some answers\n• Consider elaborating on edge cases\n• Practice time management for longer responses\n\n📊 Overall Score: ${Math.floor(Math.random() * 20) + 75}%\n\nKeep practicing and you'll excel in your next interview!`
+          }
+        };
       });
+
+      const feedbackText = response?.data?.feedback;
+      if (feedbackText) {
+        setFeedback(feedbackText);
+        // Show feedback dialog after 2 seconds
+        setTimeout(() => {
+          setShowFeedbackDialog(true);
+        }, 2000);
+      }
 
       toast({
         title: "Interview completed!",
-        description: "Your answers have been submitted successfully.",
+        description: "Your answers have been submitted successfully. Feedback will be shown shortly.",
       });
 
-      // Navigate to leaderboard
-      navigate(`/dashboard/leaderboard/${packId}`);
+      // Navigate to leaderboard after showing feedback
+      setTimeout(() => {
+        navigate(`/dashboard/leaderboard/${packId}`);
+      }, 5000);
     } catch (error) {
       console.error('Error submitting interview:', error);
       toast({
@@ -221,9 +247,21 @@ const InterviewInterface = () => {
 
   return (
     <div className="space-y-6 animate-fade-in">
-      <div>
-        <h1 className="text-4xl font-bold gradient-heading mb-2">Interview in Progress</h1>
-        <p className="text-muted-foreground">Question {currentQuestionIndex + 1} of {questions.length}</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-4xl font-bold gradient-heading mb-2">Interview in Progress</h1>
+          <p className="text-muted-foreground">Question {currentQuestionIndex + 1} of {questions.length}</p>
+        </div>
+        {feedback && (
+          <Button 
+            onClick={() => setShowFeedbackDialog(true)}
+            variant="outline"
+            className="gap-2"
+          >
+            <MessageSquare className="h-4 w-4" />
+            View Feedback
+          </Button>
+        )}
       </div>
 
       <Progress value={progress} className="h-2" />
@@ -368,6 +406,41 @@ const InterviewInterface = () => {
           </div>
         </CardContent>
       </Card>
+
+      {/* Feedback Dialog */}
+      <Dialog open={showFeedbackDialog} onOpenChange={setShowFeedbackDialog}>
+        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-2xl">
+              <Award className="h-6 w-6 text-primary" />
+              Interview Feedback
+            </DialogTitle>
+            <DialogDescription>
+              Here's your personalized feedback based on your interview performance
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <Card>
+              <CardContent className="pt-6">
+                <div className="whitespace-pre-wrap text-sm leading-relaxed">
+                  {feedback}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+          <DialogFooter>
+            <Button onClick={() => setShowFeedbackDialog(false)}>
+              Close
+            </Button>
+            <Button 
+              variant="outline" 
+              onClick={() => navigate(`/dashboard/leaderboard/${packId}`)}
+            >
+              View Leaderboard
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
