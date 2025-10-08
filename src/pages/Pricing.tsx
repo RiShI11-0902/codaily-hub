@@ -3,9 +3,17 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Check } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
+import { CheckoutDialog } from "@/components/checkout/CheckoutDialog";
 
 const Pricing = () => {
   const [isYearly, setIsYearly] = useState(false);
+  const [checkoutOpen, setCheckoutOpen] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState<{ name: string; price: number } | null>(null);
+
+  const handleCheckout = (planName: string, price: number) => {
+    setSelectedPlan({ name: planName, price });
+    setCheckoutOpen(true);
+  };
 
   const singlePacks = [
     { name: "JS Pack", features: ["15–20 JS questions", "AI feedback for the pack"] },
@@ -77,6 +85,7 @@ const Pricing = () => {
                   className="w-full"
                   variant={plan.popular ? "default" : "outline"}
                   size="lg"
+                  onClick={() => handleCheckout(plan.name, plan.price.monthly)}
                 >
                   {plan.cta}
                 </Button>
@@ -103,7 +112,12 @@ const Pricing = () => {
                     </li>
                   ))}
                 </ul>
-                <Button className="w-full" variant="outline" size="lg">
+                <Button 
+                  className="w-full" 
+                  variant="outline" 
+                  size="lg"
+                  onClick={() => handleCheckout(pack.name, 5)}
+                >
                   Buy Now
                 </Button>
               </CardContent>
@@ -111,6 +125,15 @@ const Pricing = () => {
           ))}
         </div>
       </div>
+
+      {selectedPlan && (
+        <CheckoutDialog
+          open={checkoutOpen}
+          onOpenChange={setCheckoutOpen}
+          planName={selectedPlan.name}
+          planPrice={selectedPlan.price}
+        />
+      )}
     </div>
   );
 };
