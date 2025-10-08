@@ -1,7 +1,8 @@
 export interface LeaderboardUser {
-  rank: number;
+  rank:number;
   name: string;
   avgAccuracy: number;
+  email:string
 }
 
 export interface DashboardStats {

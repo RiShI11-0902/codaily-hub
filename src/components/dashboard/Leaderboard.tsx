@@ -32,17 +32,17 @@ export const Leaderboard = ({ users, currentUser, showCurrentUser }: Leaderboard
       </CardHeader>
       <CardContent>
         <div className="space-y-3">
-          {users.map((user) => (
+          {users.map((user,index) => (
             <div
-              key={user.rank}
+              key={index}
               className="flex items-center justify-between p-3 rounded-lg bg-muted/50 hover:bg-muted transition-colors"
             >
               <div className="flex items-center gap-3">
                 <div className="flex items-center justify-center w-8 h-8">
-                  {renderRankIcon(user.rank)}
+                  {renderRankIcon(index+1)}
                 </div>
                 <div>
-                  <p className="font-medium">{user.name}</p>
+                  <p className="font-medium">{user?.name?.charAt(0).toUpperCase() + user?.name?.slice(1)  || user.email}</p>
                 </div>
               </div>
               <div className="text-right">
@@ -72,7 +72,7 @@ export const Leaderboard = ({ users, currentUser, showCurrentUser }: Leaderboard
                     </span>
                   </div>
                   <div>
-                    <p className="font-medium text-primary">{currentUser.name}</p>
+                    <p className="font-medium text-primary">{currentUser?.name?.charAt(0).toUpperCase() + currentUser?.name?.slice(1)  || currentUser.email}</p>
                   </div>
                 </div>
                 <div className="text-right">

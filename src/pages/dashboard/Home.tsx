@@ -10,7 +10,7 @@ import { Leaderboard } from "@/components/dashboard/Leaderboard";
 const Home = () => {
   const [selectedDate, setSelectedDate] = useState("");
   const { user } = useUserStore();
-  const { loading, data, chartData, filterChartByDate, updateChart } = useDashboardData(user._id);
+  const { loading, data, chartData, filterChartByDate, updateChart,  totalPages, topFive, currentuserRank, totalUsers } = useDashboardData(user._id);
 
   const formatTime = (averageTime: number) => {
     const avgMinutes = Math.floor(averageTime / 60);
@@ -45,23 +45,7 @@ const Home = () => {
   const stats = data?.stats || {};
   const recentActivity = data?.stats?.foundQuestions || [];
 
-  // Dummy leaderboard data
-  const leaderboardData = [
-    { rank: 1, name: "Alice Johnson", avgAccuracy: 94.5 },
-    { rank: 2, name: "Bob Smith", avgAccuracy: 91.2 },
-    { rank: 3, name: "Carol Williams", avgAccuracy: 88.7 },
-    { rank: 4, name: "David Brown", avgAccuracy: 85.3 },
-    { rank: 5, name: "Emma Davis", avgAccuracy: 82.9 },
-  ];
-
-  // Current user (example - not in top 5)
-  const currentUser = {
-    rank: 12,
-    name: user?.name || "You",
-    avgAccuracy: stats.average || 75.5
-  };
-
-  const isCurrentUserInTop5 = leaderboardData.some(u => u.name === currentUser.name);
+  const isCurrentUserInTop5 = currentuserRank.rank > 5
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -82,8 +66,8 @@ const Home = () => {
         />
 
         <Leaderboard
-          users={leaderboardData}
-          currentUser={currentUser}
+          users={topFive}
+          currentUser={currentuserRank}
           showCurrentUser={!isCurrentUserInTop5}
         />
       </div>
