@@ -11,11 +11,12 @@ export interface CheckoutData {
   userId: string;
   planName: string;
   planPrice: number;
+  productId: string;
 }
 
 export const submitCheckout = async (data: CheckoutData) => {
   try {
-    const response = await axios.post('/api/checkout', data);
+    const response = await axios.post(`${import.meta.env.VITE_BACKEND_BASE_URL}/payment/one-time`, data);
     return response.data;
   } catch {
     // Simulate successful checkout with dummy response

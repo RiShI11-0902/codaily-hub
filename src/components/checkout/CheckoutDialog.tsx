@@ -54,6 +54,7 @@ interface CheckoutDialogProps {
   onOpenChange: (open: boolean) => void;
   planName: string;
   planPrice: number;
+  productId: string;
 }
 
 const countries = [
@@ -66,7 +67,7 @@ const countries = [
   // Add more countries as needed
 ];
 
-export function CheckoutDialog({ open, onOpenChange, planName, planPrice }: CheckoutDialogProps) {
+export function CheckoutDialog({ open, onOpenChange, planName, planPrice, productId }: CheckoutDialogProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [countryOpen, setCountryOpen] = useState(false);
   const [customCountry, setCustomCountry] = useState("");
@@ -87,8 +88,8 @@ export function CheckoutDialog({ open, onOpenChange, planName, planPrice }: Chec
   const onSubmit = async (data: CheckoutFormData) => {
     setIsSubmitting(true);
     try {
-      const userId = "user_123"; // This would come from auth context in production
-      
+      const userId = "680b1105386eb84ab7f2caac"; // This would come from auth context in production
+
       const checkoutData: CheckoutData = {
         street: data.street,
         city: data.city,
@@ -100,9 +101,15 @@ export function CheckoutDialog({ open, onOpenChange, planName, planPrice }: Chec
         userId,
         planName,
         planPrice,
+        productId
       };
-      
+
       const response = await submitCheckout(checkoutData);
+      console.log(response.checkout_url);
+      
+      if (response.checkout_url) {
+        window.location.href = response.checkout_url
+      }
 
       toast({
         title: "Success!",
@@ -112,6 +119,7 @@ export function CheckoutDialog({ open, onOpenChange, planName, planPrice }: Chec
       form.reset();
       onOpenChange(false);
     } catch (error) {
+      console.log(error);
       toast({
         title: "Error",
         description: "Failed to process checkout. Please try again.",
@@ -240,8 +248,8 @@ export function CheckoutDialog({ open, onOpenChange, planName, planPrice }: Chec
                           >
                             {field.value
                               ? countries.find((country) => country.code === field.value)?.name ||
-                                customCountry ||
-                                field.value
+                              customCountry ||
+                              field.value
                               : "Select or type country"}
                             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                           </Button>

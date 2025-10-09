@@ -8,18 +8,15 @@ import { CheckoutDialog } from "@/components/checkout/CheckoutDialog";
 const Pricing = () => {
   const [isYearly, setIsYearly] = useState(false);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState<{ name: string; price: number } | null>(null);
+  const [selectedPlan, setSelectedPlan] = useState<{ name: string; price: number, productId: string } | null>(null);
 
-  const handleCheckout = (planName: string, price: number) => {
-    setSelectedPlan({ name: planName, price });
+  const handleCheckout = (planName: string, price: number, productId: string) => {
+    setSelectedPlan({ name: planName, price, productId });
     setCheckoutOpen(true);
   };
 
   const singlePacks = [
-    { name: "JS Pack", features: ["15–20 JS questions", "AI feedback for the pack"] },
-    { name: "Java Pack", features: ["15–20 Java questions", "AI feedback for the pack"] },
-    { name: "Python Pack", features: ["15–20 Python questions", "AI feedback for the pack"] },
-    // Add as many packs as you want
+    { name: "JS Pack", features: ["15–20 JS questions", "AI feedback for the pack"], productId: 'pdt_KgZpo7wcgpHVDAELXDaNQ' },
   ];
 
   const plans = [
@@ -34,6 +31,7 @@ const Pricing = () => {
       ],
       cta: "Subscribe",
       popular: true,
+      productId: "pdt_aY1TijxOsNlLkTIuz7sff"
     },
   ];
 
@@ -85,7 +83,7 @@ const Pricing = () => {
                   className="w-full"
                   variant={plan.popular ? "default" : "outline"}
                   size="lg"
-                  onClick={() => handleCheckout(plan.name, plan.price.monthly)}
+                  onClick={() => handleCheckout(plan.name, plan.price.monthly, plan.productId)}
                 >
                   {plan.cta}
                 </Button>
@@ -112,11 +110,11 @@ const Pricing = () => {
                     </li>
                   ))}
                 </ul>
-                <Button 
-                  className="w-full" 
-                  variant="outline" 
+                <Button
+                  className="w-full"
+                  variant="outline"
                   size="lg"
-                  onClick={() => handleCheckout(pack.name, 5)}
+                  onClick={() => handleCheckout(pack.name, 5,pack.productId )}
                 >
                   Buy Now
                 </Button>
@@ -132,6 +130,7 @@ const Pricing = () => {
           onOpenChange={setCheckoutOpen}
           planName={selectedPlan.name}
           planPrice={selectedPlan.price}
+          productId={selectedPlan.productId}
         />
       )}
     </div>
