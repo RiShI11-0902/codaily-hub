@@ -1,6 +1,16 @@
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Trophy, Medal, Crown } from "lucide-react";
 import { LeaderboardUser } from "@/types/dashboard";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 interface LeaderboardProps {
   users: LeaderboardUser[];
@@ -9,6 +19,14 @@ interface LeaderboardProps {
 }
 
 export const Leaderboard = ({ users, currentUser, showCurrentUser }: LeaderboardProps) => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
+  
+  const totalPages = Math.ceil(users.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedUsers = users.slice(startIndex, endIndex);
+
   const getAccuracyColor = (accuracy: number) => {
     if (accuracy >= 90) return 'text-green-600 dark:text-green-400';
     if (accuracy >= 80) return 'text-yellow-600 dark:text-yellow-400';
@@ -32,14 +50,14 @@ export const Leaderboard = ({ users, currentUser, showCurrentUser }: Leaderboard
       </CardHeader>
       <CardContent>
         <div className="space-y-3">
-          {users.map((user,index) => (
+          {paginatedUsers.map((user,index) => (
             <div
               key={index}
               className="flex items-center justify-between p-3 rounded-lg bg-muted/50 hover:bg-muted transition-colors"
             >
               <div className="flex items-center gap-3">
                 <div className="flex items-center justify-center w-8 h-8">
-                  {renderRankIcon(index+1)}
+                  {renderRankIcon(startIndex + index + 1)}
                 </div>
                 <div>
                   <p className="font-medium">{user?.name?.charAt(0).toUpperCase() + user?.name?.slice(1)  || user.email}</p>
@@ -85,6 +103,40 @@ export const Leaderboard = ({ users, currentUser, showCurrentUser }: Leaderboard
             </>
           )}
         </div>
+
+        {totalPages > 1 && (
+          <div className="mt-6">
+            <Pagination>
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious
+                    onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                    className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                  />
+                </PaginationItem>
+                
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                  <PaginationItem key={page}>
+                    <PaginationLink
+                      onClick={() => setCurrentPage(page)}
+                      isActive={currentPage === page}
+                      className="cursor-pointer"
+                    >
+                      {page}
+                    </PaginationLink>
+                  </PaginationItem>
+                ))}
+                
+                <PaginationItem>
+                  <PaginationNext
+                    onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                    className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+          </div>
+        )}
       </CardContent>
     </Card>
   );

@@ -31,16 +31,20 @@ export const ProgressChart = ({ data, selectedDate, onDateChange, onReset }: Pro
             Reset
           </button>
         </div>
-        <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={data} margin={{ top: 20, right: 30, left: 0, bottom: 50 }}>
-            <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+        <ResponsiveContainer width="100%" height={350}>
+          <BarChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 5 }}>
+            <CartesianGrid strokeDasharray="3 3" className="stroke-muted" opacity={0.3} />
             <XAxis
               dataKey="date"
-              tick={{ fill: 'hsl(var(--foreground))', fontSize: 12 }}
-              angle={-45}
+              tick={{ fill: 'hsl(var(--foreground))', fontSize: 11 }}
+              angle={-35}
               textAnchor="end"
+              height={60}
             />
-            <YAxis tick={{ fill: 'hsl(var(--foreground))', fontSize: 12 }} />
+            <YAxis 
+              tick={{ fill: 'hsl(var(--foreground))', fontSize: 11 }}
+              width={40}
+            />
             <Tooltip
               contentStyle={{
                 backgroundColor: 'hsl(var(--card))',
@@ -48,8 +52,14 @@ export const ProgressChart = ({ data, selectedDate, onDateChange, onReset }: Pro
                 borderRadius: '8px',
                 color: 'hsl(var(--foreground))'
               }}
+              cursor={{ fill: 'hsl(var(--muted))' }}
             />
-            <Bar dataKey="correctness" fill="hsl(var(--primary))" radius={[8, 8, 0, 0]} />
+            <Bar 
+              dataKey="correctness" 
+              fill="hsl(var(--primary))" 
+              radius={[6, 6, 0, 0]}
+              maxBarSize={60}
+            />
           </BarChart>
         </ResponsiveContainer>
       </CardContent>

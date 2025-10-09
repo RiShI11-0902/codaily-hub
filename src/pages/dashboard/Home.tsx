@@ -6,9 +6,20 @@ import { useDashboardData } from "@/hooks/useDashboardData";
 import { StatsCards } from "@/components/dashboard/StatsCards";
 import { ProgressChart } from "@/components/dashboard/ProgressChart";
 import { Leaderboard } from "@/components/dashboard/Leaderboard";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 const Home = () => {
   const [selectedDate, setSelectedDate] = useState("");
+  const [activityPage, setActivityPage] = useState(1);
+  const activityPerPage = 5;
   const { user } = useUserStore();
   const { loading, data, chartData, filterChartByDate, updateChart,  totalPages, topFive, currentuserRank, totalUsers } = useDashboardData(user._id);
 
@@ -44,6 +55,11 @@ const Home = () => {
 
   const stats = data?.stats || {};
   const recentActivity = data?.stats?.foundQuestions || [];
+  
+  const activityTotalPages = Math.ceil(recentActivity.length / activityPerPage);
+  const activityStartIndex = (activityPage - 1) * activityPerPage;
+  const activityEndIndex = activityStartIndex + activityPerPage;
+  const paginatedActivity = recentActivity.slice(activityStartIndex, activityEndIndex);
 
   const isCurrentUserInTop5 = currentuserRank.rank > 5
 
@@ -79,8 +95,8 @@ const Home = () => {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {recentActivity.map((activity: any) => (
-              <div key={activity.id} className="flex items-center justify-between p-4 border rounded-lg">
+            {paginatedActivity.map((activity: any) => (
+              <div key={activity.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors">
                 <div className="flex items-center gap-4">
                   <div className={`w-2 h-2 rounded-full bg-primary`} />
                   <div>
@@ -95,6 +111,40 @@ const Home = () => {
               </div>
             ))}
           </div>
+
+          {activityTotalPages > 1 && (
+            <div className="mt-6">
+              <Pagination>
+                <PaginationContent>
+                  <PaginationItem>
+                    <PaginationPrevious
+                      onClick={() => setActivityPage(p => Math.max(1, p - 1))}
+                      className={activityPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                    />
+                  </PaginationItem>
+                  
+                  {Array.from({ length: activityTotalPages }, (_, i) => i + 1).map((page) => (
+                    <PaginationItem key={page}>
+                      <PaginationLink
+                        onClick={() => setActivityPage(page)}
+                        isActive={activityPage === page}
+                        className="cursor-pointer"
+                      >
+                        {page}
+                      </PaginationLink>
+                    </PaginationItem>
+                  ))}
+                  
+                  <PaginationItem>
+                    <PaginationNext
+                      onClick={() => setActivityPage(p => Math.min(activityTotalPages, p + 1))}
+                      className={activityPage === activityTotalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                    />
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>
