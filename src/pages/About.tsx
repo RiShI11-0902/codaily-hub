@@ -1,35 +1,33 @@
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Target, Heart, Lightbulb } from "lucide-react";
+import { Target, Heart, Lightbulb, Github, Instagram, Linkedin } from "lucide-react";
 
 const About = () => {
-  const team = [
-    { name: "Alex Johnson", role: "Founder & CEO", initials: "AJ" },
-    { name: "Maria Garcia", role: "Head of Engineering", initials: "MG" },
-    { name: "David Kim", role: "Product Designer", initials: "DK" },
-    { name: "Sarah Williams", role: "Community Manager", initials: "SW" },
-  ];
-
   const faqs = [
     {
       question: "What is 2CodeDaily?",
-      answer: "2CodeDaily is a platform that helps developers improve their coding skills through daily challenges and curated problem packs. We provide structured learning paths for all skill levels.",
+      answer:
+        "2CodeDaily is a platform that helps developers improve their coding skills through daily challenges and curated problem packs. We provide structured learning paths for all skill levels.",
     },
     {
       question: "How does the subscription work?",
-      answer: "We offer flexible monthly and yearly plans. All plans include access to daily challenges, progress tracking, and community features. Premium plans unlock additional packs and analytics.",
+      answer:
+        "We offer flexible monthly and yearly plans. All plans include access to daily challenges, progress tracking, and community features. Premium plans unlock additional packs and analytics.",
     },
     {
       question: "Can I cancel anytime?",
-      answer: "Yes! You can cancel your subscription at any time with no penalties. Your access will continue until the end of your current billing period.",
+      answer:
+        "Yes! You can cancel your subscription at any time with no penalties. Your access will continue until the end of your current billing period.",
     },
     {
       question: "Is there a free trial?",
-      answer: "Absolutely! We offer a 7-day free trial for new users to explore all features before committing to a subscription.",
+      answer:
+        "Absolutely! We offer a 7-day free trial for new users to explore all features before committing to a subscription.",
     },
     {
       question: "What programming languages are supported?",
-      answer: "We support all major programming languages including Python, JavaScript, Java, C++, and more. Problems can be solved in your language of choice.",
+      answer:
+        "We support all major programming languages including Python, JavaScript, Java, C++, and more. Problems can be solved in your language of choice.",
     },
   ];
 
@@ -42,65 +40,74 @@ const About = () => {
             About 2CodeDaily
           </h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Our mission is to make coding practice accessible, engaging, and effective for developers at every stage of their journey.
+            My mission is to make interview preparation smarter and more accessible for developers at all levels. By integrating AI-driven mock interviews directly into the browser, this extension helps you prepare efficiently with real LeetCode questions — no need to search, schedule, or stress. Just open it up and start practicing like it's the real thing.
           </p>
-        </section>
-
-        {/* Values Section */}
-        <section className="mb-20">
-          <h2 className="text-4xl font-bold text-center mb-12 gradient-heading">
-            Our Values
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <Card className="shadow-card">
-              <CardContent className="p-8 text-center">
-                <Target className="h-12 w-12 text-primary mx-auto mb-4" />
-                <h3 className="text-2xl font-semibold mb-3">Focus on Growth</h3>
-                <p className="text-muted-foreground">
-                  We believe in continuous improvement and providing the tools to track and celebrate progress.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="shadow-card">
-              <CardContent className="p-8 text-center">
-                <Heart className="h-12 w-12 text-accent mx-auto mb-4" />
-                <h3 className="text-2xl font-semibold mb-3">Community First</h3>
-                <p className="text-muted-foreground">
-                  Learning is better together. We foster a supportive community where everyone can thrive.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="shadow-card">
-              <CardContent className="p-8 text-center">
-                <Lightbulb className="h-12 w-12 text-secondary mx-auto mb-4" />
-                <h3 className="text-2xl font-semibold mb-3">Quality Content</h3>
-                <p className="text-muted-foreground">
-                  Every challenge is carefully curated to provide maximum learning value and real-world relevance.
-                </p>
-              </CardContent>
-            </Card>
-          </div>
         </section>
 
         {/* Team Section */}
         <section className="mb-20">
           <h2 className="text-4xl font-bold text-center mb-12 gradient-heading">
-            Meet Our Team
+            About the Developer
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {team.map((member, index) => (
-              <Card key={index} className="shadow-card hover:shadow-card-hover transition-all">
-                <CardContent className="p-6 text-center">
-                  <div className="w-24 h-24 rounded-full bg-gradient-to-r from-secondary via-primary to-accent flex items-center justify-center text-3xl font-bold text-white mx-auto mb-4">
-                    {member.initials}
-                  </div>
-                  <h3 className="text-xl font-semibold mb-1">{member.name}</h3>
-                  <p className="text-muted-foreground">{member.role}</p>
-                </CardContent>
-              </Card>
-            ))}
+          <div className="grid grid-cols-1 gap-8">
+            <Card className="shadow-card hover:shadow-card-hover transition-all ">
+              <CardContent className="p-8 text-center flex flex-col items-center space-y-4">
+                {/* Avatar Section */}
+                <div className="w-24 h-24 rounded-full bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-500 flex items-center justify-center text-3xl font-bold text-white shadow-lg">
+                  RB
+                </div>
+
+                {/* Name + Role */}
+                <div className="text-center">
+                  <h4 className="text-2xl font-bold bg-clip-text text-transparent gradient-heading">
+                    Rushikesh Bagade
+                  </h4>
+                  <p className="text-blue-300 font-medium mt-1">Founder & Developer</p>
+                </div>
+
+                {/* Bio */}
+                <p className="text-blue-100 leading-relaxed max-w-xl mx-auto">
+                  I'm a passionate software developer who loves solving problems and
+                  building things that help others. 2CodeDaily is a result of my own
+                  experiences as a coder — built to make interview prep smarter, faster,
+                  and fun. I hope it helps you on your journey as much as it helped me!
+                </p>
+              </CardContent>
+
+              {/* Footer: Social Links */}
+              <CardFooter className="pt-0">
+                <div className="flex justify-center gap-6 w-full">
+                  <a
+                    href="https://www.linkedin.com/in/rushikesh-bagade11"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-100 hover:text-purple-400 transition-colors duration-300"
+                    aria-label="LinkedIn"
+                  >
+                    <Linkedin className="w-6 h-6" />
+                  </a>
+                  <a
+                    href="https://github.com/RiShI11-0902"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-100 hover:text-purple-400 transition-colors duration-300"
+                    aria-label="GitHub"
+                  >
+                    <Github className="w-6 h-6" />
+                  </a>
+                  <a
+                    href="https://www.instagram.com/rishi_codes"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-100 hover:text-purple-400 transition-colors duration-300"
+                    aria-label="Instagram"
+                  >
+                    <Instagram className="w-6 h-6" />
+                  </a>
+                </div>
+              </CardFooter>
+            </Card>
+
           </div>
         </section>
 
@@ -111,7 +118,11 @@ const About = () => {
           </h2>
           <Accordion type="single" collapsible className="space-y-4">
             {faqs.map((faq, index) => (
-              <AccordionItem key={index} value={`item-${index}`} className="border rounded-lg px-6 shadow-card">
+              <AccordionItem
+                key={index}
+                value={`item-${index}`}
+                className="border rounded-lg px-6 shadow-card"
+              >
                 <AccordionTrigger className="text-left font-semibold hover:no-underline">
                   {faq.question}
                 </AccordionTrigger>

@@ -36,7 +36,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 import { submitCheckout, CheckoutData } from "@/services/checkout";
 import { Loader2, Check, ChevronsUpDown } from "lucide-react";
-
+import useUserStore from '../../store/store'
 const checkoutSchema = z.object({
   street: z.string().trim().min(1, "Street address is required").max(200),
   city: z.string().trim().min(1, "City is required").max(100),
@@ -55,6 +55,7 @@ interface CheckoutDialogProps {
   planName: string;
   planPrice: number;
   productId: string;
+  isSubscription: boolean
 }
 
 const countries = [
@@ -67,10 +68,12 @@ const countries = [
   // Add more countries as needed
 ];
 
-export function CheckoutDialog({ open, onOpenChange, planName, planPrice, productId }: CheckoutDialogProps) {
+export function CheckoutDialog({ open, onOpenChange, planName, planPrice, productId, isSubscription }: CheckoutDialogProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [countryOpen, setCountryOpen] = useState(false);
   const [customCountry, setCustomCountry] = useState("");
+
+   const { user, solvedQ } = useUserStore();
 
   const form = useForm<CheckoutFormData>({
     resolver: zodResolver(checkoutSchema),
@@ -88,7 +91,7 @@ export function CheckoutDialog({ open, onOpenChange, planName, planPrice, produc
   const onSubmit = async (data: CheckoutFormData) => {
     setIsSubmitting(true);
     try {
-      const userId = "680b1105386eb84ab7f2caac"; // This would come from auth context in production
+      const userId = user?._id; // This would come from auth context in production
 
       const checkoutData: CheckoutData = {
         street: data.street,
@@ -101,7 +104,8 @@ export function CheckoutDialog({ open, onOpenChange, planName, planPrice, produc
         userId,
         planName,
         planPrice,
-        productId
+        productId,
+        isSubscription
       };
 
       const response = await submitCheckout(checkoutData);

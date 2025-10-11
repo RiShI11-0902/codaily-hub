@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Trophy, Medal, Award, ArrowLeft } from "lucide-react";
+import { Trophy, Medal, Award, ArrowLeft, Star } from "lucide-react";
 import {
   Pagination,
   PaginationContent,
@@ -13,38 +13,45 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import axios from "axios";
 
 interface LeaderboardEntry {
-  rank: number;
-  userName: string;
-  score: number;
-  completedAt: string;
+  name: string;
+  aiScore: number;
+  attemptedAt: string;
+  stars: number
 }
 
 const Leaderboard = () => {
   const { packId } = useParams();
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
+  const [leaderboardData, setLeaderboardData] = useState<LeaderboardEntry[]>()
   const itemsPerPage = 10;
 
-  // Dummy leaderboard data
-  const leaderboardData: LeaderboardEntry[] = [
-    { rank: 1, userName: "Sarah Chen", score: 98.5, completedAt: "2024-01-15" },
-    { rank: 2, userName: "Michael Rodriguez", score: 96.2, completedAt: "2024-01-14" },
-    { rank: 3, userName: "Emily Thompson", score: 94.8, completedAt: "2024-01-16" },
-    { rank: 4, userName: "David Kim", score: 92.3, completedAt: "2024-01-13" },
-    { rank: 5, userName: "Jessica Martinez", score: 91.7, completedAt: "2024-01-15" },
-    { rank: 6, userName: "James Wilson", score: 89.4, completedAt: "2024-01-12" },
-    { rank: 7, userName: "Lisa Anderson", score: 87.9, completedAt: "2024-01-16" },
-    { rank: 8, userName: "Robert Taylor", score: 86.5, completedAt: "2024-01-14" },
-    { rank: 9, userName: "Jennifer Lee", score: 84.2, completedAt: "2024-01-13" },
-    { rank: 10, userName: "Christopher Brown", score: 82.8, completedAt: "2024-01-15" },
-  ];
+  useEffect(() => {
+    const fetchLeaderBoard = async () => {
+      try {
+        const { data } = await axios.get(`${import.meta.env.VITE_BACKEND_BASE_URL}/pack/leaderboard/${packId}`)
+        setLeaderboardData(data.leaderboard)
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchLeaderBoard()
+  }, [])
 
-  const totalPages = Math.ceil(leaderboardData.length / itemsPerPage);
+
+  const totalPages = Math.ceil(leaderboardData?.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const paginatedData = leaderboardData.slice(startIndex, endIndex);
+  const paginatedData = leaderboardData?.slice(startIndex, endIndex);
+
+  const getStars = (star) => {
+    return Array.from({ length: star }).map((_, i) => {
+      return <Star />
+    })
+  }
 
   const getRankIcon = (rank: number) => {
     switch (rank) {
@@ -57,12 +64,6 @@ const Leaderboard = () => {
       default:
         return <Award className="h-5 w-5 text-muted-foreground" />;
     }
-  };
-
-  const getRankBadgeVariant = (rank: number): "default" | "secondary" | "outline" => {
-    if (rank === 1) return "default";
-    if (rank <= 3) return "secondary";
-    return "outline";
   };
 
   return (
@@ -81,54 +82,96 @@ const Leaderboard = () => {
         </div>
       </div>
 
+      {/* Stats Card */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <Card className="shadow-card">
+          <CardContent className="p-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                <Trophy className="h-5 w-5 text-primary" />
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">Total Participants</p>
+                <p className="text-2xl font-bold">{leaderboardData?.length}</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="shadow-card">
+          <CardContent className="p-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center">
+                <Award className="h-5 w-5 text-accent" />
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">Average Score</p>
+                <p className="text-2xl font-bold">
+                  {(leaderboardData?.reduce((sum, e) => sum + e.aiScore, 0) / leaderboardData?.length).toFixed(1)}%
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="shadow-card">
+          <CardContent className="p-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center">
+                <Medal className="h-5 w-5 text-secondary" />
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">Top Score</p>
+                <p className="text-2xl font-bold">{leaderboardData?.[0]?.aiScore}%</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
       <Card className="shadow-card">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Trophy className="h-6 w-6 text-primary" />
-            Interview Pack #{packId} Rankings
+            Interview Rankings
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
-            {paginatedData.map((entry) => (
+            {paginatedData?.map((entry, index) => (
               <Card
-                key={entry.rank}
-                className={`transition-all ${
-                  entry.rank <= 3 
-                    ? 'shadow-card-hover border-primary/20' 
-                    : 'hover:shadow-card'
-                }`}
+                key={index}
+                className={`transition-all ${index <= 3
+                  ? 'shadow-card-hover border-primary/20'
+                  : 'hover:shadow-card'
+                  }`}
               >
                 <CardContent className="p-4">
                   <div className="flex items-center gap-4">
                     {/* Rank */}
                     <div className="flex items-center justify-center w-12 h-12">
-                      {getRankIcon(entry.rank)}
+                      {getRankIcon(index)}
                     </div>
 
                     {/* User Info */}
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
-                        <p className="font-semibold text-lg">{entry.userName}</p>
-                        {entry.rank <= 3 && (
-                          <Badge variant={getRankBadgeVariant(entry.rank)}>
-                            #{entry.rank}
-                          </Badge>
+                        <p className="font-semibold text-lg">{entry.name}</p>
+                        {index <= 3 && (
+                          <p className="text-xs text-muted-foreground"><p className="text-yellow-500 w-1">{getStars(entry.stars)}</p>
+                        </p>
                         )}
                       </div>
                       <p className="text-sm text-muted-foreground">
-                        Completed: {new Date(entry.completedAt).toLocaleDateString()}
+                        Completed: {new Date(entry.attemptedAt).toLocaleDateString()}
                       </p>
                     </div>
 
                     {/* Score */}
                     <div className="text-right">
                       <div className="text-2xl font-bold text-primary">
-                        {entry.score}%
+                        {entry.aiScore}%
                       </div>
-                      {entry.rank > 3 && (
-                        <p className="text-xs text-muted-foreground">Rank #{entry.rank}</p>
-                      )}
                     </div>
                   </div>
                 </CardContent>
@@ -146,7 +189,7 @@ const Leaderboard = () => {
                       className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
                     />
                   </PaginationItem>
-                  
+
                   {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
                     <PaginationItem key={page}>
                       <PaginationLink
@@ -158,7 +201,7 @@ const Leaderboard = () => {
                       </PaginationLink>
                     </PaginationItem>
                   ))}
-                  
+
                   <PaginationItem>
                     <PaginationNext
                       onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
@@ -172,52 +215,7 @@ const Leaderboard = () => {
         </CardContent>
       </Card>
 
-      {/* Stats Card */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card className="shadow-card">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                <Trophy className="h-5 w-5 text-primary" />
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Total Participants</p>
-                <p className="text-2xl font-bold">{leaderboardData.length}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="shadow-card">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center">
-                <Award className="h-5 w-5 text-accent" />
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Average Score</p>
-                <p className="text-2xl font-bold">
-                  {(leaderboardData.reduce((sum, e) => sum + e.score, 0) / leaderboardData.length).toFixed(1)}%
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="shadow-card">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center">
-                <Medal className="h-5 w-5 text-secondary" />
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Top Score</p>
-                <p className="text-2xl font-bold">{leaderboardData[0]?.score}%</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+      
     </div>
   );
 };

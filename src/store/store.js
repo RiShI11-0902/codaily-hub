@@ -1,9 +1,7 @@
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 const userStore = (set) => ({
-  user: {
-    _id: "680b1105386eb84ab7f2caac",
-  },
+  user: {},
   solvedQ: [],
   userData: (data) => {
     set((state) => ({

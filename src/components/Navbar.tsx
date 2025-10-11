@@ -1,19 +1,23 @@
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
+import useUserStore from "@/store/store"
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const location = useLocation();
-
+  const location = useLocation();  
+  const { user } = useUserStore();
   const navLinks = [
     { name: "Home", path: "/" },
     { name: "About", path: "/about" },
     { name: "Pricing", path: "/pricing" },
-    { name: "Shipping", path: "/shipping" },
     { name: "Dashboard", path: "/dashboard" },
   ];
+
+  const navigate = useNavigate()
+
+  console.log(user);
+  
 
   const isActive = (path: string) => location.pathname === path;
 
@@ -35,10 +39,10 @@ const Navbar = () => {
                   isActive(link.path) ? "text-primary font-semibold" : "text-muted-foreground"
                 }`}
               >
-                {link.name}
+                { link.name == 'Dashboard' && !user ? "" : link.name}
               </Link>
             ))}
-            <Button>Get Started</Button>
+            <Button onClick={()=>navigate('/sign-in')} className="w-full">Get Started</Button>
           </div>
 
           {/* Mobile Menu Button */}
@@ -54,7 +58,7 @@ const Navbar = () => {
         {/* Mobile Navigation */}
         {isOpen && (
           <div className="md:hidden py-4 space-y-4 animate-fade-in">
-            {navLinks.map((link) => (
+            {navLinks.map((link) => ( 
               <Link
                 key={link.path}
                 to={link.path}
@@ -63,10 +67,10 @@ const Navbar = () => {
                 }`}
                 onClick={() => setIsOpen(false)}
               >
-                {link.name}
+                { link.name == 'Dashboard' && !user ? "" : link.name}
               </Link>
             ))}
-            <Button className="w-full">Get Started</Button>
+            <Button onClick={()=>navigate('/sign-in')} className="w-full">Get Started</Button>
           </div>
         )}
       </div>

@@ -8,10 +8,10 @@ import { CheckoutDialog } from "@/components/checkout/CheckoutDialog";
 const Pricing = () => {
   const [isYearly, setIsYearly] = useState(false);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState<{ name: string; price: number, productId: string } | null>(null);
+  const [selectedPlan, setSelectedPlan] = useState<{ name: string; price: number, productId: string, isSubscription: boolean } | null>(null);
 
-  const handleCheckout = (planName: string, price: number, productId: string) => {
-    setSelectedPlan({ name: planName, price, productId });
+  const handleCheckout = (planName: string, price: number, productId: string, isSubscription: boolean) => {
+    setSelectedPlan({ name: planName, price, productId, isSubscription });
     setCheckoutOpen(true);
   };
 
@@ -83,7 +83,7 @@ const Pricing = () => {
                   className="w-full"
                   variant={plan.popular ? "default" : "outline"}
                   size="lg"
-                  onClick={() => handleCheckout(plan.name, plan.price.monthly, plan.productId)}
+                  onClick={() => handleCheckout(plan.name, plan.price.monthly, plan.productId, true)}
                 >
                   {plan.cta}
                 </Button>
@@ -114,7 +114,7 @@ const Pricing = () => {
                   className="w-full"
                   variant="outline"
                   size="lg"
-                  onClick={() => handleCheckout(pack.name, 5,pack.productId )}
+                  onClick={() => handleCheckout(pack.name, 5,pack.productId, false )}
                 >
                   Buy Now
                 </Button>
@@ -131,6 +131,7 @@ const Pricing = () => {
           planName={selectedPlan.name}
           planPrice={selectedPlan.price}
           productId={selectedPlan.productId}
+          isSubscription={selectedPlan.isSubscription}
         />
       )}
     </div>

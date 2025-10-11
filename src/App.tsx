@@ -6,11 +6,19 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "./components/ThemeProvider";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import Protected from "./components/auth/Protected"
+
 import Home from "./pages/Home";
 import About from "./pages/About";
 import Pricing from "./pages/Pricing";
 import Shipping from "./pages/Shipping";
-import Dashboard from "./pages/Dashboard";
+import AuthPage from "./pages/AuthPage";
+import Dashboard from "./pages/Dashboard"; 
+import Privacy from "./pages/Privacy"
+import Contact from "./pages/Contact"
+import Refunds from "./pages/Refunds"
+import TermsConditions from "./pages/TermsConditions"
+
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -32,10 +40,15 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Layout><Home /></Layout>} />
+            <Route path="/sign-in" element={<Layout><AuthPage /></Layout>} />
             <Route path="/about" element={<Layout><About /></Layout>} />
             <Route path="/pricing" element={<Layout><Pricing /></Layout>} />
             <Route path="/shipping" element={<Layout><Shipping /></Layout>} />
-            <Route path="/dashboard/*" element={<Dashboard />} />
+            <Route path="/privacy-policy" element={<Layout><Privacy /></Layout>} />
+            <Route path="/terms-conditions" element={<Layout><TermsConditions /></Layout>} />
+            <Route path="/refunds" element={<Layout><Refunds/></Layout>} />
+            <Route path="/contact-us" element={<Layout><Contact/></Layout>} />
+            <Route path="/dashboard/*" element={ <Protected><Dashboard /></Protected>} />
             <Route path="*" element={<Layout><NotFound /></Layout>} />
           </Routes>
         </BrowserRouter>

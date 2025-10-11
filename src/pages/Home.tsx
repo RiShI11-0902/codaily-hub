@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { CheckCircle, Code, Zap, Users, Star, TrendingUp, Video, Award } from "lucide-react";
@@ -8,25 +8,26 @@ const Home = () => {
   const features = [
     {
       icon: Code,
-      title: "Daily Challenges",
-      description: "Fresh coding problems delivered every day to keep your skills sharp.",
+      title: "Practice Coding",
+      description: "Solve coding problems and improve your programming skills daily.",
     },
     {
       icon: Zap,
-      title: "Curated Packs",
-      description: "Themed problem sets designed to master specific topics and patterns.",
+      title: "Explain Your Thought Process",
+      description: "Not just code—share your approach and reasoning, just like in real interviews.",
     },
     {
       icon: Users,
-      title: "Community Driven",
-      description: "Learn from peers and share solutions with a vibrant coding community.",
+      title: "Interview Packs & Leaderboards",
+      description: "Compete with peers using language-specific interview packs and see your rank.",
     },
     {
       icon: TrendingUp,
-      title: "Track Progress",
-      description: "Visualize your journey with detailed analytics and leaderboards.",
+      title: "Track Your Progress",
+      description: "Monitor your improvement over time with detailed analytics and performance charts.",
     },
   ];
+
 
   const packs = [
     { name: "Array Mastery", problems: 50, rating: 4.8 },
@@ -35,65 +36,16 @@ const Home = () => {
     { name: "Graph Algorithms", problems: 45, rating: 4.8 },
   ];
 
+  const navigate = useNavigate()
+
   const interviewPacks = [
-    { 
-      id: 1,
-      name: "Java Interview Pack", 
-      language: "Java",
-      questions: 25, 
-      duration: "60 min",
-      price: "$29.99",
-      difficulty: "Medium",
-      icon: Code
-    },
-    { 
-      id: 2,
-      name: "Python Mastery", 
-      language: "Python",
-      questions: 30, 
-      duration: "75 min",
-      price: "$34.99",
-      difficulty: "Medium",
-      icon: Code
-    },
-    { 
+    {
       id: 3,
-      name: "JavaScript Expert", 
+      name: "JavaScript Interview",
       language: "JavaScript",
-      questions: 28, 
-      duration: "70 min",
-      price: "$32.99",
-      difficulty: "Advanced",
-      icon: Code
-    },
-    { 
-      id: 4,
-      name: "C++ Fundamentals", 
-      language: "C++",
-      questions: 22, 
-      duration: "55 min",
-      price: "$27.99",
+      questions: 15,
+      price: "$5",
       difficulty: "Medium",
-      icon: Code
-    },
-    { 
-      id: 5,
-      name: "Go Interview Prep", 
-      language: "Go",
-      questions: 20, 
-      duration: "50 min",
-      price: "$24.99",
-      difficulty: "Intermediate",
-      icon: Code
-    },
-    { 
-      id: 6,
-      name: "TypeScript Pro", 
-      language: "TypeScript",
-      questions: 26, 
-      duration: "65 min",
-      price: "$31.99",
-      difficulty: "Advanced",
       icon: Code
     },
   ];
@@ -128,7 +80,7 @@ const Home = () => {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section 
+      <section
         className="relative py-20 md:py-32 overflow-hidden"
         style={{
           backgroundImage: `url(${heroBg})`,
@@ -140,19 +92,22 @@ const Home = () => {
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-3xl mx-auto text-center animate-fade-in">
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 gradient-heading">
-              Master Coding with Daily Practice
+              Practise LeetCode like a Pro
             </h1>
             <p className="text-xl md:text-2xl text-muted-foreground mb-8">
-              Elevate your programming skills with curated challenges and structured learning paths
+              Not just coding—explain your thinking like in real interviews
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="text-lg">
-                Start Free Trial
-              </Button>
-              <Button size="lg" variant="outline" className="text-lg">
-                View Pricing
-              </Button>
-            </div>
+            <a
+              href="https://chromewebstore.google.com/detail/2-code-daily/eamejmihabhegokmlajmahmpgkfadphl"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="relative inline-block px-6 py-3 rounded-2xl text-lg font-semibold gradient-heading bg-muted/50 overflow-hidden"
+            >
+              🚀 Get the Extension
+
+              {/* Animated bottom border */}
+              <span className="absolute bottom-0 left-0 w-full h-0.5 hover:text-white bg-gradient-to-r from-teal-300 via-purple-300 to-pink-400 animate-border"></span>
+            </a>
           </div>
         </div>
       </section>
@@ -181,23 +136,24 @@ const Home = () => {
       </section>
 
       {/* Popular Packs */}
-      <section className="py-20">
+      <section className=" py-16 text-center  montserrat-heading">
         <div className="container mx-auto px-4">
-          <h2 className="text-4xl md:text-5xl font-bold text-center mb-12 gradient-heading">
-            Popular Packs
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {packs.map((pack, index) => (
-              <Card key={index} className="shadow-card hover:shadow-card-hover transition-all cursor-pointer">
-                <CardContent className="p-6">
-                  <h3 className="text-xl font-semibold mb-2">{pack.name}</h3>
-                  <p className="text-muted-foreground mb-4">{pack.problems} Problems</p>
-                  <div className="flex items-center gap-2">
-                    <Star className="h-5 w-5 fill-accent text-accent" />
-                    <span className="font-semibold">{pack.rating}</span>
-                  </div>
-                </CardContent>
-              </Card>
+          <h2 className="text-4xl md:text-5xl font-extrabold mb-4 gradient-heading">How It Works</h2>
+          <p className=" mb-12 text-primary">Get started in just 4 simple steps!</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {["Register Here", "Download Extension", "Enter Your Email", "Start Interviewing"].map((step, i) => (
+              <div key={i} className="bg-text-muted p-6 rounded-lg shadow-sm hover:shadow-2xl transform hover:-translate-y-2 transition">
+                <div className="w-12 h-12 text-2xl font-bold bg-[#535C91] text-white rounded-full flex items-center justify-center mx-auto mb-4">
+                  {i + 1}
+                </div>
+                <h3 className="text-lg font-bold gradient-heading mb-2">{step}</h3>
+                <p className="text-muted-foreground ">
+                  {
+                    ["Create an account to get started.", "Install our browser extension.",
+                      "Provide your email for starting.", "Practice mock interviews with ease!"][i]
+                  }
+                </p>
+              </div>
             ))}
           </div>
         </div>
@@ -211,14 +167,14 @@ const Home = () => {
               Interview Packs
             </h2>
             <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-              Master your next technical interview with language-specific question packs. 
+              Master your next technical interview with language-specific question packs.
               Record your answers and compete on the leaderboard!
             </p>
           </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+          <div className=" items-center justify-center gap-6">
             {interviewPacks.map((pack) => (
-              <Card key={pack.id} className="shadow-card hover:shadow-card-hover transition-all">
+              <Card key={pack.id} className="shadow-card mx-auto max-w-xl hover:shadow-card-hover transition-all">
                 <CardContent className="p-6">
                   <div className="flex items-start justify-between mb-4">
                     <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center">
@@ -228,19 +184,16 @@ const Home = () => {
                       <p className="text-2xl font-bold text-primary">{pack.price}</p>
                     </div>
                   </div>
-                  
+
                   <h3 className="text-2xl font-bold mb-2">{pack.name}</h3>
                   <p className="text-muted-foreground mb-4">{pack.language}</p>
-                  
+
                   <div className="space-y-2 mb-4">
                     <div className="flex items-center gap-2 text-sm">
                       <Video className="h-4 w-4 text-primary" />
-                      <span>{pack.questions} Video Questions</span>
+                      <span>{pack.questions} Questions</span>
                     </div>
-                    <div className="flex items-center gap-2 text-sm">
-                      <CheckCircle className="h-4 w-4 text-primary" />
-                      <span>{pack.duration} Duration</span>
-                    </div>
+
                     <div className="flex items-center gap-2 text-sm">
                       <Award className="h-4 w-4 text-primary" />
                       <span className="px-2 py-1 bg-primary/10 text-primary rounded-full text-xs font-medium">
@@ -248,7 +201,7 @@ const Home = () => {
                       </span>
                     </div>
                   </div>
-                  
+
                   <Button className="w-full" size="lg">
                     Purchase Pack
                   </Button>
@@ -256,7 +209,7 @@ const Home = () => {
               </Card>
             ))}
           </div>
-          
+
           <div className="mt-12 text-center">
             <Card className="max-w-2xl mx-auto shadow-card">
               <CardContent className="p-6">
@@ -270,31 +223,11 @@ const Home = () => {
                   </div>
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  Each interview pack has its own leaderboard showing top performers based on their scores. 
+                  Each interview pack has its own leaderboard showing top performers based on their scores.
                   Record your best answers and climb to the top!
                 </p>
               </CardContent>
             </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* How It Works */}
-      <section className="py-20 bg-muted/30">
-        <div className="container mx-auto px-4">
-          <h2 className="text-4xl md:text-5xl font-bold text-center mb-12 gradient-heading">
-            How It Works
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            {steps.map((item, index) => (
-              <div key={index} className="text-center">
-                <div className="w-16 h-16 rounded-full bg-gradient-to-r from-secondary via-primary to-accent flex items-center justify-center text-2xl font-bold text-white mx-auto mb-4">
-                  {item.step}
-                </div>
-                <h3 className="text-2xl font-semibold mb-2">{item.title}</h3>
-                <p className="text-muted-foreground">{item.description}</p>
-              </div>
-            ))}
           </div>
         </div>
       </section>
@@ -340,8 +273,8 @@ const Home = () => {
           <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
             Join thousands of developers improving their skills with 2CodeDaily
           </p>
-          <Button size="lg" variant="secondary" className="text-lg">
-            Get Started Free
+          <Button size="lg" variant="secondary" onClick={()=>navigate("/sign-in")} className="text-lg">
+            Get Started first 3 interviews FREE
           </Button>
         </div>
       </section>

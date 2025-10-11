@@ -12,19 +12,29 @@ export interface CheckoutData {
   planName: string;
   planPrice: number;
   productId: string;
+  isSubscription: boolean;
 }
 
 export const submitCheckout = async (data: CheckoutData) => {
   try {
-    const response = await axios.post(`${import.meta.env.VITE_BACKEND_BASE_URL}/payment/one-time`, data);
+    const response = data.isSubscription
+      ? await axios.post(
+          `${import.meta.env.VITE_BACKEND_BASE_URL}/payment/subscription`,
+          data
+        )
+      : await axios.post(
+          `${import.meta.env.VITE_BACKEND_BASE_URL}/payment/one-time`,
+          data
+        );
+
     return response.data;
   } catch {
     // Simulate successful checkout with dummy response
-    console.log('Checkout submitted (dummy):', data);
-    
+    console.log("Checkout submitted (dummy):", data);
+
     // Simulate network delay
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+
     return {
       success: true,
       message: `Successfully purchased ${data.planName}!`,
