@@ -18,6 +18,7 @@ import Privacy from "./pages/Privacy"
 import Contact from "./pages/Contact"
 import Refunds from "./pages/Refunds"
 import TermsConditions from "./pages/TermsConditions"
+import AuthenticateExtension from './pages/AuthenticateExtension'
 
 import NotFound from "./pages/NotFound";
 
@@ -45,6 +46,7 @@ const App = () => (
             <Route path="/pricing" element={<Layout><Pricing /></Layout>} />
             <Route path="/shipping" element={<Layout><Shipping /></Layout>} />
             <Route path="/privacy-policy" element={<Layout><Privacy /></Layout>} />
+            <Route path='//authenticate-extension' element={<AuthenticateExtension />} />
             <Route path="/terms-conditions" element={<Layout><TermsConditions /></Layout>} />
             <Route path="/refunds" element={<Layout><Refunds/></Layout>} />
             <Route path="/contact-us" element={<Layout><Contact/></Layout>} />

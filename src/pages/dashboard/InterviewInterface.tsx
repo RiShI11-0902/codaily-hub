@@ -197,6 +197,7 @@ import { FeedbackDialog } from "@/components/interview/FeedbackDialog";
 import { QuestionCard } from "@/components/interview/QuestionCard";
 import { RecordingControls } from "@/components/interview/RecordingControls";
 import { AnswerTextarea } from "@/components/interview/AnswerTextarea";
+import useQuestionStore from "../../store/questionPackStore"
 
 import SpeechRecognition, {
   useSpeechRecognition,
@@ -215,6 +216,7 @@ const InterviewInterface = () => {
   const [showFeedbackDialog, setShowFeedbackDialog] = useState(false);
 
   const { questions } = useInterviewData(packId);
+  const { saveAnswer: addAnswer, clearAnswers } = useQuestionStore()
 
   // Speech recognition
   const { transcript, listening, resetTranscript } = useSpeechRecognition();
@@ -260,6 +262,8 @@ const InterviewInterface = () => {
       answerText: answerText.trim() || transcript.trim(),
     };
 
+    addAnswer(newAnswer)
+
     setRecordedAnswers([...recordedAnswers, newAnswer]);
     setAnswerText("");
     resetTranscript();
@@ -280,7 +284,7 @@ const InterviewInterface = () => {
     setIsSubmitting(true);
     try {
       const response = await submitInterview(packId || "", answers);
-      
+
       const feedbackText = response?.purchasedPack.attempts[0].feedback;
       if (feedbackText) {
         setFeedback(feedbackText);
@@ -351,7 +355,7 @@ const InterviewInterface = () => {
           isSubmitting={isSubmitting}
           onStartRecording={startRecording}
           onStopRecording={stopRecording}
-          onSaveAnswer={saveAnswer} recordingType={"audio"}        />
+          onSaveAnswer={saveAnswer} recordingType={"audio"} />
 
         {listening && (
           <p className="text-sm text-muted-foreground mt-2">
