@@ -45,7 +45,7 @@ const Pricing = () => {
           </h1>
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
             Start free and upgrade as you grow. All plans include AI-powered feedback.
-            (Subscribing is unavailable right now)
+            ( Subscriptions are temporarily paused as we migrate our payment gateway. For early access or queries, reach us at contact2codedaily@gmail.com )
           </p>
         </div>
         <div className="grid grid-cols-1  gap-8 max-w-2xl mx-auto mb-16">
@@ -116,7 +116,7 @@ const Pricing = () => {
                   variant="outline"
                   size="lg"
                   disabled
-                  onClick={() => handleCheckout(pack.name, 5,pack.productId, false )}
+                  onClick={() => handleCheckout(pack.name, 5, pack.productId, false)}
                 >
                   Buy Now
                 </Button>
