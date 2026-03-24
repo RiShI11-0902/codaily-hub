@@ -108,6 +108,17 @@ const Home = () => {
               {/* Animated bottom border */}
               <span className="absolute bottom-0 left-0 w-full h-0.5 hover:text-white bg-gradient-to-r from-teal-300 via-purple-300 to-pink-400 animate-border"></span>
             </a>
+             <a
+              href="https://www.youtube.com/watch?v=iHuH_gbDvng&t=11s"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="relative inline-block px-6 py-3 rounded-2xl text-lg font-semibold gradient-heading bg-muted/50 overflow-hidden"
+            >
+              Watch Demo
+
+              {/* Animated bottom border */}
+              <span className="absolute bottom-0 left-0 w-full h-0.5 hover:text-white bg-gradient-to-r from-teal-300 via-purple-300 to-pink-400 animate-border"></span>
+            </a>
           </div>
         </div>
       </section>
