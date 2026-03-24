@@ -103,6 +103,7 @@ const Premium = () => {
             size="lg" 
             className="w-full" 
             onClick={handleUpgrade}
+            disabled
           >
             <Sparkles className="mr-2 h-4 w-4" />
             {isSubscribed ? "Already Subscribed" : "Upgrade to Premium"}
