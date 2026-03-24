@@ -6,11 +6,14 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { PlayCircle, Clock, Zap, Video, Award, Code } from "lucide-react";
 import axios from "axios";
+import { FeedbackDialog } from "@/components/interview/FeedbackDialog";
 
 const StartInterview = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<any>(null);
+  const [feedback, setFeedback] = useState<string | null>(null);
+  const [showFeedbackDialog, setShowFeedbackDialog] = useState(false);
 
   // Simulate purchased packs (in production, fetch from backend)
   const purchasedPacks = [
@@ -53,12 +56,10 @@ const StartInterview = () => {
 
       try {
         // Dummy API call
-        const res = await axios.get(`${import.meta.env.VITE_BACKEND_BASE_URL}/pack/get`); // your endpoint to fetch all packs
+        const { data } = await axios.get(`${import.meta.env.VITE_BACKEND_BASE_URL}/pack/purchased`); // your endpoint to fetch all packs
 
-        setData(res.data.packs);
+        setData(data.packs);
 
-        console.log(res.data.packs);
-        
       } catch (error) {
         console.error("Error fetching interview data:", error);
       } finally {
@@ -98,48 +99,65 @@ const StartInterview = () => {
 
         {data.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {data.map((pack) => (
-              <Card key={pack.id} className="shadow-card hover:shadow-card-hover transition-all">
-                <CardHeader>
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center">
-                      <Code className="h-5 w-5 text-primary-foreground" />
+            {data?.length === 0 ? (
+              <p>No unused packs available</p>
+            ) : (
+              data.map((pack) => (
+                <Card key={pack._id} className="shadow-card hover:shadow-card-hover transition-all">
+                  <CardHeader>
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center">
+                        <Code className="h-5 w-5 text-primary-foreground" />
+                      </div>
+                      <Badge variant="default">{pack.pack.language}</Badge>
                     </div>
-                    <Badge variant="default">{pack.language}</Badge>
-                  </div>
-                  <CardTitle className="text-xl">{pack.packName}</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2 text-sm">
-                      <Video className="h-4 w-4 text-primary" />
-                      <span>{pack.questions.length} Questions</span>
+                    <CardTitle className="text-xl">{pack.pack.packName}</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2 text-sm">
+                        <Video className="h-4 w-4 text-primary" />
+                        <span>{pack.pack.questions?.length} Questions</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm">
+                        <Award className="h-4 w-4 text-primary" />
+                        <Badge variant="outline" className="text-xs">{pack.pack.description}</Badge>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-2 text-sm">
-                      <Award className="h-4 w-4 text-primary" />
-                      <Badge variant="outline" className="text-xs">{pack.description}</Badge>
+                    <div className="flex gap-2">
+                      {
+                        pack.used ? <Button
+                          className="flex-1"
+                          size="lg"
+                          onClick={() => {
+                            setFeedback(pack.attempts[0].feedback)
+                            setShowFeedbackDialog(true)
+                          }}
+                        >
+                          <PlayCircle className="mr-2 h-4 w-4" />
+                          See Feedback
+                        </Button> : <Button
+                          className="flex-1"
+                          size="lg"
+                          onClick={() => navigate(`/dashboard/interview/${pack.pack._id}`)}
+                        >
+                          <PlayCircle className="mr-2 h-4 w-4" />
+                          Start
+                        </Button>
+                      }
+                      <Button
+                        variant="outline"
+                        size="lg"
+                        onClick={() => navigate(`/dashboard/leaderboard/${pack.pack._id}`)}
+                      >
+                        Leaderboard
+                      </Button>
                     </div>
-                  </div>
-                  <div className="flex gap-2">
-                    <Button
-                      className="flex-1"
-                      size="lg"
-                      onClick={() => navigate(`/dashboard/interview/${pack._id}`)}
-                    >
-                      <PlayCircle className="mr-2 h-4 w-4" />
-                      Start
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="lg"
-                      onClick={() => navigate(`/dashboard/leaderboard/${pack.id}`)}
-                    >
-                      Leaderboard
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                  </CardContent>
+                </Card>
+              ))
+            )}
+
           </div>
         ) : (
           <Card className="shadow-card">
@@ -150,41 +168,6 @@ const StartInterview = () => {
           </Card>
         )}
       </div>
-
-      {/* Practice Levels
-      <div>
-        <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-          <Zap className="h-6 w-6 text-primary" />
-          Quick Practice
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {data?.interviews?.map((interview: any) => (
-            <Card key={interview.id} className="shadow-card hover:shadow-card-hover transition-all">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Zap className="h-5 w-5 text-primary" />
-                  {interview.type} Level
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-muted-foreground">
-                    <Clock className="h-4 w-4" />
-                    <span className="text-sm">{interview.duration}</span>
-                  </div>
-                  <div className="text-sm text-muted-foreground">
-                    {interview.questions} Questions
-                  </div>
-                </div>
-                <Button className="w-full" size="lg">
-                  <PlayCircle className="mr-2 h-4 w-4" />
-                  Start Now
-                </Button>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </div> */}
 
       <Card className="shadow-card">
         <CardContent className="p-6">
@@ -199,6 +182,13 @@ const StartInterview = () => {
           </ul>
         </CardContent>
       </Card>
+
+      <FeedbackDialog
+        open={showFeedbackDialog}
+        onOpenChange={setShowFeedbackDialog}
+        feedback={feedback}
+        packId={""}
+      />
     </div>
   );
 };

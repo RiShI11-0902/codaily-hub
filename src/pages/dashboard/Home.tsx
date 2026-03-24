@@ -21,7 +21,9 @@ const Home = () => {
   const [activityPage, setActivityPage] = useState(1);
   const activityPerPage = 5;
   const { user } = useUserStore();
-  const { loading, data, chartData, filterChartByDate, updateChart,  totalPages, topFive, currentuserRank, totalUsers } = useDashboardData(user._id);
+  console.log(user._id);
+  
+  const { loading, data, chartData, filterChartByDate, updateChart,  totalPages, topFive, currentuserRank, totalUsers } = useDashboardData(user?._id);
 
   const formatTime = (averageTime: number) => {
     const avgMinutes = Math.floor(averageTime / 60);
@@ -61,7 +63,7 @@ const Home = () => {
   const activityEndIndex = activityStartIndex + activityPerPage;
   const paginatedActivity = recentActivity.slice(activityStartIndex, activityEndIndex);
 
-  const isCurrentUserInTop5 = currentuserRank.rank > 5
+  const isCurrentUserInTop5 = currentuserRank?.rank > 5
 
   return (
     <div className="space-y-6 animate-fade-in">

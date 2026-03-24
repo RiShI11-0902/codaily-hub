@@ -3,33 +3,30 @@ import { useNavigate } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import axios from "axios";
+import useUserStore from '../../store/store';
 
 const Logout = () => {
   const navigate = useNavigate();
+  const { user, removeUser } = useUserStore();
 
   useEffect(() => {
     const performLogout = async () => {
       // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
+    try {
+      const res = await axios.get(
+        `${import.meta.env.VITE_BACKEND_BASE_URL}/auth/logout`, 
+        { withCredentials: true }
+      );
       
-      try {
-        // Dummy API call
-        await fetch('/api/logout').catch(() => ({}));
-        
-        toast.success("Logged out successfully", {
-          description: "See you next time!",
-        });
-        
-        // Redirect to home page
-        setTimeout(() => {
-          navigate('/');
-        }, 1000);
-      } catch (error) {
-        console.error("Error logging out:", error);
-        toast.error("Logout failed", {
-          description: "Please try again",
-        });
+      if (res.status === 200) {
+        removeUser();
+        toast.success('Logged out successfully');
+        navigate('/');
       }
+    } catch (error) {
+      toast.error('Failed to logout. Please try again.');
+    }
     };
 
     performLogout();

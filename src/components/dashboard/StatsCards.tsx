@@ -10,7 +10,7 @@ interface StatsCardsProps {
 
 export const StatsCards = ({ stats, formatTime }: StatsCardsProps) => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       <Card className="shadow-card">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Interviews Given</CardTitle>
@@ -18,7 +18,7 @@ export const StatsCards = ({ stats, formatTime }: StatsCardsProps) => {
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">{stats.foundQuestions?.length}</div>
-          <p className="text-xs text-muted-foreground">+12 from last week</p>
+          <p className="text-xs text-muted-foreground">Keep stacking those interviews!</p>
         </CardContent>
       </Card>
 
@@ -36,7 +36,7 @@ export const StatsCards = ({ stats, formatTime }: StatsCardsProps) => {
               {Number(stats.average?.toFixed(1) ?? 0)}%
             </span>
           </div>
-          <p className="text-xs text-muted-foreground">Keep it going!</p>
+          <p className="text-xs text-muted-foreground">Sharpen those skills! You got this.</p>
         </CardContent>
       </Card>
 
@@ -47,18 +47,7 @@ export const StatsCards = ({ stats, formatTime }: StatsCardsProps) => {
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">{formatTime(stats.avgTime ?? 0)}</div>
-          <p className="text-xs text-muted-foreground">This month</p>
-        </CardContent>
-      </Card>
-
-      <Card className="shadow-card">
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Target Progress</CardTitle>
-          <Trophy className="h-4 w-4 text-muted-foreground" />
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">{stats.targetProgress || 25}%</div>
-          <Progress value={stats.targetProgress || 25} className="mt-2" />
+          <p className="text-xs text-muted-foreground">You're flying through these!</p>
         </CardContent>
       </Card>
     </div>

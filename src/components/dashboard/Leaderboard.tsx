@@ -86,16 +86,16 @@ export const Leaderboard = ({ users, currentUser, showCurrentUser }: Leaderboard
                 <div className="flex items-center gap-3">
                   <div className="flex items-center justify-center w-8 h-8">
                     <span className="text-sm font-semibold text-primary">
-                      #{currentUser.rank}
+                      #{currentUser?.rank}
                     </span>
                   </div>
                   <div>
-                    <p className="font-medium text-primary">{currentUser?.name?.charAt(0).toUpperCase() + currentUser?.name?.slice(1)  || currentUser.email}</p>
+                    <p className="font-medium text-primary">{currentUser?.name?.charAt(0).toUpperCase() + currentUser?.name?.slice(1)  || currentUser?.email}</p>
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className={`text-lg font-bold ${getAccuracyColor(currentUser.avgAccuracy)}`}>
-                    {currentUser.avgAccuracy.toFixed(1)}%
+                  <p className={`text-lg font-bold ${getAccuracyColor(currentUser?.avgAccuracy)}`}>
+                    {currentUser?.avgAccuracy.toFixed(1)}%
                   </p>
                   <p className="text-xs text-muted-foreground">Avg Accuracy</p>
                 </div>

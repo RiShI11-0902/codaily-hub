@@ -19,6 +19,9 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import axios from "axios";
+import { toast } from "sonner";
+import useUserStore from '../store/store';
 
 const items = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
@@ -33,9 +36,23 @@ export function AppSidebar() {
   const { state } = useSidebar();
   const isCollapsed = state === "collapsed";
   const navigate = useNavigate();
+    const { user, removeUser } = useUserStore();
 
-  const handleLogout = () => {
-    navigate("/dashboard/logout");
+  const handleLogout = async () => {
+    try {
+      const res = await axios.get(
+        `${import.meta.env.VITE_BACKEND_BASE_URL}/auth/logout`, 
+        { withCredentials: true }
+      );
+      
+      if (res.status === 200) {
+        removeUser();
+        toast.success('Logged out successfully');
+        navigate('/');
+      }
+    } catch (error) {
+      toast.error('Failed to logout. Please try again.');
+    }
   };
 
   return (

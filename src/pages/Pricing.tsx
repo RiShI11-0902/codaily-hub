@@ -8,15 +8,15 @@ import { CheckoutDialog } from "@/components/checkout/CheckoutDialog";
 const Pricing = () => {
   const [isYearly, setIsYearly] = useState(false);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState<{ name: string; price: number, productId: string } | null>(null);
+  const [selectedPlan, setSelectedPlan] = useState<{ name: string; price: number, productId: string, isSubscription: boolean } | null>(null);
 
-  const handleCheckout = (planName: string, price: number, productId: string) => {
-    setSelectedPlan({ name: planName, price, productId });
+  const handleCheckout = (planName: string, price: number, productId: string, isSubscription: boolean) => {
+    setSelectedPlan({ name: planName, price, productId, isSubscription });
     setCheckoutOpen(true);
   };
 
   const singlePacks = [
-    { name: "JS Pack", features: ["15–20 JS questions", "AI feedback for the pack"], productId: 'pdt_KgZpo7wcgpHVDAELXDaNQ' },
+    { name: "JS Pack", features: ["15–20 JS questions", "AI feedback for the pack"], productId: 'pdt_LRMJGZzWskjKJXVXAxvVm' },
   ];
 
   const plans = [
@@ -31,7 +31,7 @@ const Pricing = () => {
       ],
       cta: "Subscribe",
       popular: true,
-      productId: "pdt_aY1TijxOsNlLkTIuz7sff"
+      productId: "pdt_YdMeXPg11MAZGS5LAe8vl"
     },
   ];
 
@@ -45,6 +45,7 @@ const Pricing = () => {
           </h1>
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
             Start free and upgrade as you grow. All plans include AI-powered feedback.
+            ( Subscriptions are temporarily paused as we migrate our payment gateway. For early access or queries, reach us at contact2codedaily@gmail.com )
           </p>
         </div>
         <div className="grid grid-cols-1  gap-8 max-w-2xl mx-auto mb-16">
@@ -83,7 +84,7 @@ const Pricing = () => {
                   className="w-full"
                   variant={plan.popular ? "default" : "outline"}
                   size="lg"
-                  onClick={() => handleCheckout(plan.name, plan.price.monthly, plan.productId)}
+                  onClick={() => handleCheckout(plan.name, plan.price.monthly, plan.productId, true)}
                 >
                   {plan.cta}
                 </Button>
@@ -114,7 +115,8 @@ const Pricing = () => {
                   className="w-full"
                   variant="outline"
                   size="lg"
-                  onClick={() => handleCheckout(pack.name, 5,pack.productId )}
+                  disabled
+                  onClick={() => handleCheckout(pack.name, 5, pack.productId, false)}
                 >
                   Buy Now
                 </Button>
@@ -131,6 +133,7 @@ const Pricing = () => {
           planName={selectedPlan.name}
           planPrice={selectedPlan.price}
           productId={selectedPlan.productId}
+          isSubscription={selectedPlan.isSubscription}
         />
       )}
     </div>
